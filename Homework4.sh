@@ -104,3 +104,102 @@ cat bad_lines.csv
 
 #Task 7
 
+mkdir my_project
+cd my_project
+mkdir src docs tests build
+
+cd src
+mkdir images scripts data
+cd -
+
+cd docs
+mkdir images scripts data
+cd -
+
+cd tests
+mkdir images scripts data
+cd -
+
+cd build
+mkdir images scripts data
+cd -
+
+for d in . \
+         src docs tests build \
+         {src,docs,tests,build}/{images,scripts,data}; do
+    if [ "$d" = "." ]; then
+        echo "Создана директория: my_project"
+    else
+        echo "Создана директория: my_project/$d"
+    fi
+done
+
+touch README.md
+
+#Task 8
+
+mkdir logs
+cd logs
+
+for N in {1..10}; do
+  touch "log_$(printf '%02d' $N).txt"
+  echo "Это лог номер $N" > "log_$(printf '%02d' $N).txt"
+  cat "log_$(printf '%02d' $N).txt"
+done
+
+for i in {1..10}; do
+    if [ $((i % 2)) -eq 0 ]; then
+        rm -f "log_$(printf '%02d' $i).txt"
+    fi
+done
+ls log_*.txt
+
+#Task 9
+
+touch document1.txt document2.txt document3.txt document4.txt document5.txt
+mkdir renamed
+
+ls document*.txt | while IFS= read -r f; do
+  echo "Файл: $f"
+  mv -v --  "$f" "renamed/$(printf '%s\n' $f| sed 's/^document/file/g')"
+done
+
+ls -l renamed/
+
+#Task 10
+
+mkdir backup
+mkdir all_backups
+for i in {1..7}; do
+  dir="backup/day_$i"
+  mkdir -p "backup/day_$i"
+  mkdir -p "$dir"
+  echo "Резервная копия за день $i" > "$dir/info.txt"
+  cp -v "backup/day_$i/info.txt" "all_backups/info_day_$i.txt"
+done
+
+ls -l all_backups
+
+#11
+
+cd "$(dirname $0)" || exit 1
+touch image1.jpg image2.png doc1.txt doc2.pdf script.sh archive.tar.gz
+mkdir images documents scripts archives
+for f in *; do
+    [ -f "$f" ] || continue
+    case "$f" in
+        *.tar.gz)      dest="archives"  ;;
+        *.jpg|*.png)   dest="images"    ;;
+        *.txt|*.pdf)   dest="documents" ;;
+        *.sh)          dest="scripts"   ;;
+        *)             continue         ;;
+    esac
+    if [[ "$f" == *.* ]]; then
+        ext="${f##*.}"
+    else
+        ext="(нет)"
+    fi
+
+    mv -v -- "$f" "$dest/"
+done
+ls -R images documents scripts archives
