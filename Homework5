@@ -1,0 +1,30 @@
+set -euo pipefail
+mkdir -p data
+cd data
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_41/gencode.v41.basic.annotation.gff3.gz
+gunzip -k gencode.v50.annotation.gff3.gz
+#Создаём вложенную директорию
+mkdir -p terminal_task/results
+#Преобразуем файл в таблицу аннотации согласно заданным условиям
+awk -F '\t' 'BEGIN{OFS= "\t"; print "chrom","start","end","strand","gene_name"}
+!/^#/ && $3=="gene" && $9~/(^|;)gene_type=unprocessed_pseudogene(;|$)/ {new= split($9,massiv,";"); name=""
+ for (i=1; i<=new; i++) {
+  if (massiv[i] ~ /^gene_name=/) {
+     name = massiv[i]
+     sub(/^gene_name=/, "", name)
+     break }
+ }
+ print $1, $4, $5, $7, name
+}' gencode.v41.basic.annotation.gff3>annotation_tabble.tsv
+head annotation_tabble.tsv
+wc -l annotation_tabble.tsv
+#Модифицируем таблицу, согласно условиям
+awk -F '\t' 'BEGIN{OFS= "\t"}
+NR==1 { print; next }
+{
+  if($4=="+") { 
+    $3=$2+1 }
+  else if ($4=="-") {
+    $2=$3
+    $3=$3+1 }
+  print }' annotation_tabble.tsv>terminal_task/results/result.tsv
