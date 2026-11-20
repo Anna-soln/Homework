@@ -1,0 +1,3 @@
+#Task 1
+grep -oE '[^\w.]+@[\w.]+.(ru|su|рф)$' email.txt
+cat email.txt
