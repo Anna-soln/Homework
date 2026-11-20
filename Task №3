@@ -1,0 +1,2 @@
+#Task 3
+ls -1 'PTD' | grep -E ' --genome| --GCA'
