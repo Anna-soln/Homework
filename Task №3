@@ -1,2 +1,2 @@
 #Task 3
-ls -1 'PTD' | grep -E ' --genome| --GCA'
+ls -1 /anya_/data/data | grep -E ' --genome| --GCA'
