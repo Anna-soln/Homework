@@ -1,0 +1,4 @@
+#Task 4
+cd data
+cd data
+grep -P '^(?:[^\t]*\t){2}gene\t(?:[^\t]*\t){3}-\t(?:[^\t]*\t)[^\t]*[;\t](?:gene_name|Name|gene|ID>
